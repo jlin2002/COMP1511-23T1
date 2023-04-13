@@ -19,12 +19,12 @@ int main(void) {
     // list
     // The list should be
     // 3 -> 1 -> 4 -> 1 -> 5 -> 9 -> X
-    // Print list1, list2 and the joined list using
-    // print_list_with_addresses function to ensure that
-    // they are different
+    struct node *joined_list = append(list1, list2);
+    print_list(joined_list);
     free_list(list1);
     free_list(list2);
     // Task 5: Deal with the final memory leak!
+    free_list(joined_list);
     return 0;
 }
 
@@ -45,14 +45,37 @@ struct node *append_node(struct node *head, int data) {
 // Task 2: Implement the copy function
 // Returns a copy of the list
 struct node *copy(struct node *list) {
-    return NULL;
+    struct node *head_copy = NULL;
+    struct node *curr_copy = NULL;
+    struct node *curr = list;
+    while (curr != NULL) {
+        struct node *new_node = create_node(curr->data);
+        if (head_copy == NULL) {
+            head_copy = new_node;
+        } else {
+            curr_copy->next = new_node;
+        }
+        curr_copy = new_node;
+        curr = curr->next;
+    }
+    return head_copy;
 }
 
 // Task 3: Implement the append function
 // Returns a list containing a copy of list2 appended to a copy of
 // list1. The original lists are NOT modified.
 struct node *append(struct node *list1, struct node *list2) {
-    return NULL;
+    if (list1 == NULL) {
+        return copy(list2);
+    }
+    struct node *list1_copy = copy(list1);
+    struct node *list2_copy = copy(list2);
+    struct node *curr = list1_copy;
+    while (curr->next != NULL) {
+        curr = curr->next;
+    }
+    curr->next = list2_copy;
+    return list1_copy;
 }
 
 void print_list(struct node *head) {
